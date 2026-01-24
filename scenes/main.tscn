@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://main001"]
+
+[ext_resource type="PackedScene" uid="uid://player001" path="res://scenes/player/player.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://platform001" path="res://scenes/levels/platform.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://house001" path="res://scenes/props/house.tscn" id="3"]
+
+[node name="Main" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 10, 0)
+shadow_enabled = true
+
+[node name="Platform" parent="." instance=ExtResource("2")]
+
+[node name="House" parent="." instance=ExtResource("3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.25, 0)
+
+[node name="Player" parent="." instance=ExtResource("1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 8)
