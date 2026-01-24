@@ -10,8 +10,18 @@ Game project by Axioma Solutions.
    - Download from https://godotengine.org/
 
 2. **Git LFS** (required for 3D models and textures)
+   
+   **macOS:**
    ```bash
    brew install git-lfs
+   git lfs install
+   ```
+   
+   **Windows:**
+   - Download from https://git-lfs.github.com/
+   - Run the installer
+   - Open Git Bash or Command Prompt:
+   ```bash
    git lfs install
    ```
 
