@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://terrain001"]
+
+[ext_resource type="PackedScene" uid="uid://bfnr1mh5yev12" path="res://models/terrain/bumpy_terrain.glb" id="1"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1"]
+size = Vector3(10, 1, 10)
+
+[node name="Terrain" type="Node3D"]
+
+[node name="bumpy_terrain" parent="." instance=ExtResource("1")]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_1")
+
+[editable path="bumpy_terrain"]

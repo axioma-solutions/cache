@@ -10,9 +10,6 @@
 data_*/
 mono_crash.*.json
 
-# Blender source files (optional - remove if you want to commit them)
-blender_source/
-
 # System/tool-specific ignores
 .DS_Store
 *.swp

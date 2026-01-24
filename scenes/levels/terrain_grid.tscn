@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bg72e51gmeypk"]
+
+[ext_resource type="PackedScene" path="res://scenes/levels/terrain.tscn" id="1"]
+[ext_resource type="Script" path="res://scripts/terrain_grid.gd" id="2"]
+
+[node name="TerrainGrid" type="Node3D"]
+script = ExtResource("2")
+terrain_scene = ExtResource("1")
+grid_size = 5
+tile_size = 10.0
