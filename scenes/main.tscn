@@ -7,7 +7,7 @@
 [node name="Main" type="Node3D"]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 10, 0)
+transform = Transform3D(0.54241467, -0.75279695, -0.37293857, 0.82638335, 0.3981774, 0.39817733, -0.15125096, -0.5241673, 0.83807623, 0, 10, 0)
 shadow_enabled = true
 
 [node name="Platform" parent="." instance=ExtResource("2")]
