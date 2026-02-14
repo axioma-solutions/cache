@@ -7,7 +7,7 @@ extends CharacterBody3D
 @export var friction: float = 50.0
 
 @export_group("Air Movement")
-@export var max_air_speed: float = 3.0
+@export var max_air_speed: float = 5.0
 @export var air_acceleration: float = 70.0
 @export var air_resistance: float = 10.0
 
@@ -72,8 +72,14 @@ func _physics_process(delta):
 func handle_crouch(delta):
 	is_crouching = Input.is_action_pressed("crouch")
 	var target_height = normal_height * crouch_multiplier if is_crouching else normal_height
-	var speed = CROUCH_SPEED if is_crouching else STANDUP_SPEED
-	collision_shape.shape.height = lerp(collision_shape.shape.height, target_height, speed * delta)
+	
+	if is_on_floor():
+		# Smooth crouch on ground
+		var speed = CROUCH_SPEED if is_crouching else STANDUP_SPEED
+		collision_shape.shape.height = lerp(collision_shape.shape.height, target_height, speed * delta)
+	else:
+		# Instant crouch in air
+		collision_shape.shape.height = target_height
 
 func apply_gravity(delta):
 	if not is_on_floor():
@@ -110,14 +116,19 @@ func handle_ground_movement(direction: Vector3, delta: float):
 		velocity.z = move_toward(velocity.z, 0, friction * delta)
 
 func handle_air_movement(direction: Vector3, delta: float):
+	# Get current horizontal speed
+	var current_speed = Vector2(velocity.x, velocity.z).length()
+	# Use current speed as max, but at least max_speed
+	var effective_max_air_speed = max(current_speed, max_speed)
+	
 	velocity.x = move_toward(velocity.x, 0, air_resistance * delta)
 	velocity.z = move_toward(velocity.z, 0, air_resistance * delta)
 	if direction:
 		velocity.x += direction.x * air_acceleration * delta
 		velocity.z += direction.z * air_acceleration * delta
 		var horizontal_speed = Vector2(velocity.x, velocity.z).length()
-		if horizontal_speed > max_air_speed:
-			var scale = max_air_speed / horizontal_speed
+		if horizontal_speed > effective_max_air_speed:
+			var scale = effective_max_air_speed / horizontal_speed
 			velocity.x *= scale
 			velocity.z *= scale
 
@@ -134,9 +145,17 @@ func apply_view_bobbing(delta):
 		bob_time = 0.0
 	
 	var target_camera_y = normal_camera_y * crouch_multiplier if is_crouching else normal_camera_y
-	var speed = CROUCH_SPEED if is_crouching else STANDUP_SPEED
-	var base_camera_y = lerp(camera.position.y, target_camera_y, speed * delta)
-	camera.position.y = base_camera_y + bob_offset_y
+	
+	if is_on_floor():
+		# Smooth camera movement on ground
+		var speed = CROUCH_SPEED if is_crouching else STANDUP_SPEED
+		var base_camera_y = lerp(camera.position.y, target_camera_y, speed * delta)
+		camera.position.y = base_camera_y + bob_offset_y
+	else:
+		# In air: smoothly move to target (crouch or normal)
+		var base_camera_y = lerp(camera.position.y, target_camera_y, STANDUP_SPEED * delta)
+		camera.position.y = base_camera_y + bob_offset_y
+	
 	camera.position.x = bob_offset_x
 	camera.rotation.z = bob_offset_x * 0.2
 
