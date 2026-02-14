@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://dd5l4wywksqty" path="res://textures/walls/proto_gray.png" id="1_c3myy"]
 [ext_resource type="PackedScene" uid="uid://cj0dbn6p5plev" path="res://models/terrain/ramp.tscn" id="2_8i028"]
-[ext_resource type="PackedScene" uid="uid://duywxffl2ehdw" path="res://scenes/props/barrel.tscn" id="3_2dny5"]
+[ext_resource type="PackedScene" path="res://scenes/props/barrel.tscn" id="3_2dny5"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ground"]
 albedo_color = Color(0.8789311, 0.8821448, 0.87611794, 1)
@@ -14,7 +14,7 @@ material = SubResource("StandardMaterial3D_ground")
 size = Vector3(50, 1, 50)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ground"]
-size = Vector3(50, 0.5, 50)
+size = Vector3(50, 1, 50)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8i028"]
 albedo_color = Color(0.20373325, 0.8, 0.11199999, 1)

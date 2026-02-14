@@ -7,6 +7,7 @@ height = 0.9135132
 radius = 0.3022461
 
 [node name="Barrel" type="RigidBody3D"]
+mass = 10.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0018615723, 0)
