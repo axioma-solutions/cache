@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://b14184np7jdud"]
+[gd_scene load_steps=9 format=3 uid="uid://b14184np7jdud"]
 
 [ext_resource type="Texture2D" uid="uid://dd5l4wywksqty" path="res://textures/walls/proto_gray.png" id="1_c3myy"]
 [ext_resource type="PackedScene" uid="uid://cj0dbn6p5plev" path="res://models/terrain/ramp.tscn" id="2_8i028"]
+[ext_resource type="PackedScene" uid="uid://duywxffl2ehdw" path="res://scenes/props/barrel.tscn" id="3_2dny5"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ground"]
 albedo_color = Color(0.8789311, 0.8821448, 0.87611794, 1)
@@ -74,3 +75,12 @@ material = SubResource("StandardMaterial3D_orange")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, -0.75, 0.433013, 0, 10, 0)
 shadow_enabled = true
+
+[node name="Barrel" parent="." instance=ExtResource("3_2dny5")]
+transform = Transform3D(1, 0, 0, 0, 0.023175925, 0.99973136, 0, -0.99973136, 0.023175925, -8.344339, 4.6000624, -11.004578)
+
+[node name="Barrel2" parent="." instance=ExtResource("3_2dny5")]
+transform = Transform3D(1, 0, 0, 0, -0.027154082, -0.9996313, 0, 0.9996313, -0.027154082, -7.1487885, 4.5723376, -10.115503)
+
+[node name="Barrel3" parent="." instance=ExtResource("3_2dny5")]
+transform = Transform3D(1, 0, 0, 0, -0.9985253, 0.05428814, 0, -0.05428814, -0.9985253, -4.631069, 3.896409, -10.342836)
