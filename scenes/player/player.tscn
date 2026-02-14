@@ -7,7 +7,17 @@ height = 1.8
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1")
+max_speed = null
+sprint_speed = null
+acceleration = null
+friction = null
+step_height = 0.4
+max_air_speed = null
+air_acceleration = null
+air_resistance = null
+jump_velocity = null
 crouch_multiplier = 0.7
+crouch_speed_multiplier = null
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

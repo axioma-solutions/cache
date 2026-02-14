@@ -1,9 +1,10 @@
-[gd_scene load_steps=13 format=3 uid="uid://b14184np7jdud"]
+[gd_scene load_steps=15 format=3 uid="uid://b14184np7jdud"]
 
 [ext_resource type="Texture2D" uid="uid://dd5l4wywksqty" path="res://textures/walls/proto_gray.png" id="1_c3myy"]
 [ext_resource type="PackedScene" uid="uid://cj0dbn6p5plev" path="res://models/terrain/ramp.tscn" id="2_8i028"]
 [ext_resource type="PackedScene" uid="uid://duywxffl2ehdw" path="res://scenes/props/barrel.tscn" id="3_2dny5"]
 [ext_resource type="Script" uid="uid://eglswj3vblyr" path="res://scripts/suns.gd" id="4_suns"]
+[ext_resource type="Texture2D" uid="uid://13tgwsw5cakv" path="res://textures/walls/proto_white.png" id="5_2y7ey"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
 sky_horizon_color = Color(0.646, 0.656, 0.67, 1)
@@ -39,6 +40,10 @@ uv1_triplanar = true
 albedo_color = Color(1, 0.55, 0, 1)
 albedo_texture = ExtResource("1_c3myy")
 uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_03sew"]
+albedo_color = Color(0.14999998, 0.33416665, 1, 1)
+albedo_texture = ExtResource("5_2y7ey")
 
 [node name="Garden" type="Node3D"]
 
@@ -115,3 +120,26 @@ transform = Transform3D(1, 0, 0, 0, -0.027154082, -0.9996313, 0, 0.9996313, -0.0
 
 [node name="Barrel3" parent="." instance=ExtResource("3_2dny5")]
 transform = Transform3D(1, 0, 0, 0, -0.9985253, 0.05428814, 0, -0.05428814, -0.9985253, -4.631069, 3.896409, -10.342836)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 1, 0)
+use_collision = true
+material = SubResource("StandardMaterial3D_03sew")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGBox3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.25, 0)
+use_collision = true
+size = Vector3(0.5, 0.5, 0.5)
+material = SubResource("StandardMaterial3D_03sew")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGBox3D/CSGBox3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.100000024, -1)
+use_collision = true
+size = Vector3(0.3, 0.3, 0.3)
+material = SubResource("StandardMaterial3D_03sew")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGBox3D/CSGBox3D/CSGBox3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.049999952, -1)
+use_collision = true
+size = Vector3(0.4, 0.4, 0.4)
+material = SubResource("StandardMaterial3D_03sew")

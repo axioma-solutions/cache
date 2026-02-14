@@ -37,6 +37,7 @@ var bob_horizontal_amplitude = 0.010
 @onready var collision_shape = $CollisionShape3D
 
 var held_object: RigidBody3D = null
+var held_object_prev_position: Vector3 = Vector3.ZERO
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -51,8 +52,10 @@ func _input(event):
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		rotate_y(-event.relative.x * MOUSE_SENSITIVITY)
-		camera.rotate_x(-event.relative.y * MOUSE_SENSITIVITY)
-		camera.rotation.x = clamp(camera.rotation.x, -PI / 2, PI / 2)
+		# Clamp before applying rotation
+		var new_rotation_x = camera.rotation.x - event.relative.y * MOUSE_SENSITIVITY
+		new_rotation_x = clamp(new_rotation_x, -PI / 2, PI / 2)
+		camera.rotation.x = new_rotation_x
 	
 	if event.is_action_pressed("interact"):
 		if held_object:
@@ -161,8 +164,25 @@ func apply_view_bobbing(delta):
 
 func update_held_object(delta):
 	if held_object:
-		var hold_position = camera.global_position + camera.global_transform.basis.z * -HOLD_DISTANCE
-		held_object.global_position = held_object.global_position.lerp(hold_position, 10 * delta)
+		var hold_direction = camera.global_transform.basis.z * -1
+		var desired_position = camera.global_position + hold_direction * HOLD_DISTANCE
+		
+		# Raycast further to account for object size (add 0.5m for barrel radius)
+		var raycast_end = camera.global_position + hold_direction * (HOLD_DISTANCE + 0.5)
+		var space_state = get_world_3d().direct_space_state
+		var query = PhysicsRayQueryParameters3D.create(camera.global_position, raycast_end)
+		query.exclude = [self, held_object]
+		var result = space_state.intersect_ray(query)
+		
+		var final_position = desired_position
+		if result:
+			# Hit something, pull object back by its radius
+			var hit_distance = camera.global_position.distance_to(result.position)
+			var safe_distance = hit_distance - 0.5
+			final_position = camera.global_position + hold_direction * safe_distance
+		
+		held_object_prev_position = held_object.global_position
+		held_object.global_position = held_object.global_position.lerp(final_position, 10 * delta)
 
 func try_pickup():
 	var space_state = get_world_3d().direct_space_state
@@ -180,8 +200,18 @@ func try_pickup():
 		
 		held_object = result.collider
 		held_object.freeze = true
+		# Completely disable collision with everything
+		held_object.collision_layer = 0
+		held_object.collision_mask = 0
 
 func drop_object():
 	if held_object:
+		var throw_velocity = (held_object.global_position - held_object_prev_position) / get_physics_process_delta_time()
+		
 		held_object.freeze = false
+		held_object.collision_layer = 1
+		held_object.collision_mask = 1
+		# Damping based on mass: heavier = less velocity transfer
+		var damping = 5.0 / held_object.mass
+		held_object.linear_velocity = throw_velocity * damping
 		held_object = null
