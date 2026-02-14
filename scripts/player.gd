@@ -14,6 +14,9 @@ extends CharacterBody3D
 @export_group("Jump")
 @export var jump_velocity: float = 3.5
 
+@export_group("Object Interaction")
+@export var throw_force: float = 10.0
+
 const GRAVITY = 9.81
 const MOUSE_SENSITIVITY = 0.002
 const PICKUP_DISTANCE = 2.0
@@ -38,6 +41,8 @@ var bob_horizontal_amplitude = 0.010
 
 var held_object: RigidBody3D = null
 var held_object_prev_position: Vector3 = Vector3.ZERO
+var held_object_rotation_offset: Quaternion
+var rotation_locked: bool = false
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -62,6 +67,10 @@ func _input(event):
 			drop_object()
 		else:
 			try_pickup()
+	
+	if held_object and event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			throw_object()
 
 func _physics_process(delta):
 	handle_crouch(delta)
@@ -183,6 +192,20 @@ func update_held_object(delta):
 		
 		held_object_prev_position = held_object.global_position
 		held_object.global_position = held_object.global_position.lerp(final_position, 10 * delta)
+		
+		# Lock rotation to camera when holding right click
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+			if not rotation_locked:
+				# Store rotation offset relative to camera when first pressed
+				var camera_quat = camera.global_transform.basis.get_rotation_quaternion()
+				var object_quat = held_object.global_transform.basis.get_rotation_quaternion()
+				held_object_rotation_offset = camera_quat.inverse() * object_quat
+				rotation_locked = true
+			# Apply camera rotation + offset to keep same face visible
+			var camera_quat = camera.global_transform.basis.get_rotation_quaternion()
+			held_object.global_transform.basis = Basis(camera_quat * held_object_rotation_offset)
+		else:
+			rotation_locked = false
 
 func try_pickup():
 	var space_state = get_world_3d().direct_space_state
@@ -214,4 +237,15 @@ func drop_object():
 		# Damping based on mass: heavier = less velocity transfer
 		var damping = 5.0 / held_object.mass
 		held_object.linear_velocity = throw_velocity * damping
+		held_object = null
+
+func throw_object():
+	if held_object:
+		var throw_direction = camera.global_transform.basis.z * -1
+		
+		held_object.freeze = false
+		held_object.collision_layer = 1
+		held_object.collision_mask = 1
+		# Throw force inversely proportional to mass
+		held_object.linear_velocity = throw_direction * (throw_force / held_object.mass)
 		held_object = null
