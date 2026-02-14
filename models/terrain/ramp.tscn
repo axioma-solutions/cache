@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://cj0dbn6p5plev"]
+
+[ext_resource type="Texture2D" uid="uid://13tgwsw5cakv" path="res://textures/walls/proto_white.png" id="1_ijofe"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ijofe"]
+albedo_color = Color(0.99999994, 0.44419956, 0.26925316, 1)
+albedo_texture = ExtResource("1_ijofe")
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3h5pq"]
+albedo_color = Color(0.99573594, 0.5505201, 7.70092e-07, 1)
+albedo_texture = ExtResource("1_ijofe")
+uv1_triplanar = true
+
+[node name="Ramp" type="CSGCombiner3D"]
+material_override = SubResource("StandardMaterial3D_ijofe")
+
+[node name="Ramp" type="CSGBox3D" parent="."]
+size = Vector3(20, 5, 4)
+material = SubResource("StandardMaterial3D_3h5pq")
+
+[node name="Cutter" type="CSGBox3D" parent="Ramp"]
+transform = Transform3D(0.9848078, 0.17364821, 0, -0.17364821, 0.9848078, 0, 0, 0, 1, -0.12608898, 1.8448025, 0)
+operation = 2
+size = Vector3(21.5, 5, 5)

@@ -1,10 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://main001"]
+[gd_scene load_steps=3 format=3 uid="uid://main001"]
 
 [ext_resource type="PackedScene" uid="uid://player001" path="res://scenes/player/player.tscn" id="1"]
-[ext_resource type="Texture2D" uid="uid://de1e6abhlnsen" path="res://textures/decals/transformateur.jpg" id="2_tbgi4"]
-[ext_resource type="PackedScene" uid="uid://house001" path="res://scenes/props/house.tscn" id="3"]
-[ext_resource type="PackedScene" path="res://scenes/levels/terrain_grid.tscn" id="3_sugp2"]
-[ext_resource type="PackedScene" uid="uid://c3qe4o0rq8owy" path="res://blender_source/tram_1.blend" id="4_jyhfs"]
+[ext_resource type="PackedScene" uid="uid://b14184np7jdud" path="res://scenes/levels/garden.tscn" id="2_0wfyh"]
 
 [node name="Main" type="Node3D"]
 
@@ -12,18 +9,7 @@
 transform = Transform3D(0.54241467, -0.75279695, -0.37293857, 0.82638335, 0.3981774, 0.39817733, -0.15125096, -0.5241673, 0.83807623, 0, 10, 0)
 shadow_enabled = true
 
-[node name="House" parent="." instance=ExtResource("3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.25, 0)
-
-[node name="Sprite3D" type="Sprite3D" parent="House"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.50083065, -0.18623543, 3.0021486)
-pixel_size = 0.0007
-texture = ExtResource("2_tbgi4")
-
 [node name="Player" parent="." instance=ExtResource("1")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.004037857, 2, 8.00023)
 
-[node name="TerrainGrid" parent="." instance=ExtResource("3_sugp2")]
-
-[node name="tram_1" parent="." instance=ExtResource("4_jyhfs")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.835878, 0.79357815, 6.9862432)
+[node name="Garden" parent="." instance=ExtResource("2_0wfyh")]

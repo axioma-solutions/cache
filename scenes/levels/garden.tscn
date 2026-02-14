@@ -1,0 +1,76 @@
+[gd_scene load_steps=8 format=3 uid="uid://b14184np7jdud"]
+
+[ext_resource type="Texture2D" uid="uid://dd5l4wywksqty" path="res://textures/walls/proto_gray.png" id="1_c3myy"]
+[ext_resource type="PackedScene" uid="uid://cj0dbn6p5plev" path="res://models/terrain/ramp.tscn" id="2_8i028"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ground"]
+albedo_color = Color(0.8789311, 0.8821448, 0.87611794, 1)
+albedo_texture = ExtResource("1_c3myy")
+uv1_triplanar = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_ground"]
+material = SubResource("StandardMaterial3D_ground")
+size = Vector3(50, 1, 50)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ground"]
+size = Vector3(50, 0.5, 50)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8i028"]
+albedo_color = Color(0.20373325, 0.8, 0.11199999, 1)
+albedo_texture = ExtResource("1_c3myy")
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_orange"]
+albedo_color = Color(1, 0.55, 0, 1)
+albedo_texture = ExtResource("1_c3myy")
+uv1_triplanar = true
+
+[node name="Garden" type="Node3D"]
+
+[node name="Node3D" parent="." instance=ExtResource("2_8i028")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2.9861145, -11)
+use_collision = true
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_ground")
+
+[node name="GroundCollision" type="StaticBody3D" parent="Ground"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/GroundCollision"]
+shape = SubResource("BoxShape3D_ground")
+
+[node name="BushWalls" type="Node3D" parent="."]
+
+[node name="NorthWall" type="CSGBox3D" parent="BushWalls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -25)
+use_collision = true
+size = Vector3(50, 3, 2)
+material = SubResource("StandardMaterial3D_8i028")
+
+[node name="SouthWall" type="CSGBox3D" parent="BushWalls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 25)
+use_collision = true
+size = Vector3(50, 3, 2)
+material = SubResource("StandardMaterial3D_8i028")
+
+[node name="EastWall" type="CSGBox3D" parent="BushWalls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 1.5, 0)
+use_collision = true
+size = Vector3(2, 3, 50)
+material = SubResource("StandardMaterial3D_8i028")
+
+[node name="WestWall" type="CSGBox3D" parent="BushWalls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25, 1.5, 0)
+use_collision = true
+size = Vector3(2, 3, 50)
+material = SubResource("StandardMaterial3D_8i028")
+
+[node name="House" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.5, 10)
+use_collision = true
+size = Vector3(8, 5, 8)
+material = SubResource("StandardMaterial3D_orange")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, -0.75, 0.433013, 0, 10, 0)
+shadow_enabled = true
