@@ -38,17 +38,21 @@ var bob_horizontal_amplitude = 0.010
 
 @onready var camera = $Camera3D
 @onready var collision_shape = $CollisionShape3D
+@onready var weapon_holder = $Camera3D/WeaponHolder
+@onready var crosshair = $UI/Crosshair
 
 var held_object: RigidBody3D = null
 var held_object_prev_position: Vector3 = Vector3.ZERO
 var held_object_rotation_offset: Quaternion
 var rotation_locked: bool = false
+var equipped_weapon: Node3D = null
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	# Store initial values
 	normal_height = collision_shape.shape.height
 	normal_camera_y = camera.position.y
+	if crosshair:
+		crosshair.visible = false
 
 func _input(event):
 	if event.is_action_pressed("ui_cancel"):
@@ -68,9 +72,17 @@ func _input(event):
 		else:
 			try_pickup()
 	
+	if event.is_action_pressed("throw_weapon"):
+		if equipped_weapon:
+			throw_weapon()
+	
 	if held_object and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			throw_object()
+	
+	if equipped_weapon and not held_object and event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			shoot_weapon()
 
 func _physics_process(delta):
 	handle_crouch(delta)
@@ -214,18 +226,34 @@ func try_pickup():
 	var query = PhysicsRayQueryParameters3D.create(from, to)
 	var result = space_state.intersect_ray(query)
 	
+	if result:
+		print("Hit: ", result.collider.name, " - Is RigidBody3D: ", result.collider is RigidBody3D, " - In weapon group: ", result.collider.is_in_group("weapon"))
+	
 	if result and result.collider is RigidBody3D:
+		# Check if it's a weapon
+		if result.collider.is_in_group("weapon"):
+			print("Picking up weapon!")
+			pickup_weapon(result.collider)
+			return
+		
 		# Don't pick up if standing on it
 		if is_on_floor() and get_floor_normal().dot(Vector3.UP) > 0.7:
 			var floor_collision = get_last_slide_collision()
 			if floor_collision and floor_collision.get_collider() == result.collider:
 				return
 		
+		# Holster weapon when picking up object
+		if equipped_weapon:
+			equipped_weapon.visible = false
+			if crosshair:
+				crosshair.visible = false
+		
 		held_object = result.collider
 		held_object.freeze = true
-		# Completely disable collision with everything
 		held_object.collision_layer = 0
 		held_object.collision_mask = 0
+	else:
+		print("No hit detected")
 
 func drop_object():
 	if held_object:
@@ -234,10 +262,15 @@ func drop_object():
 		held_object.freeze = false
 		held_object.collision_layer = 1
 		held_object.collision_mask = 1
-		# Damping based on mass: heavier = less velocity transfer
 		var damping = 5.0 / held_object.mass
 		held_object.linear_velocity = throw_velocity * damping
 		held_object = null
+		
+		# Show weapon again
+		if equipped_weapon:
+			equipped_weapon.visible = true
+			if crosshair:
+				crosshair.visible = true
 
 func throw_object():
 	if held_object:
@@ -250,3 +283,41 @@ func throw_object():
 		# Throw force inversely proportional to mass + player velocity
 		held_object.linear_velocity = throw_direction * (throw_force / held_object.mass) + player_velocity
 		held_object = null
+
+func pickup_weapon(weapon: RigidBody3D):
+	if equipped_weapon:
+		return
+	
+	weapon.get_parent().remove_child(weapon)
+	weapon_holder.add_child(weapon)
+	weapon.position = Vector3.ZERO
+	weapon.rotation = Vector3.ZERO
+	weapon.freeze = true
+	weapon.collision_layer = 0
+	weapon.collision_mask = 0
+	equipped_weapon = weapon
+	if crosshair:
+		crosshair.visible = true
+
+func throw_weapon():
+	if not equipped_weapon:
+		return
+	
+	weapon_holder.remove_child(equipped_weapon)
+	get_tree().root.add_child(equipped_weapon)
+	equipped_weapon.global_position = camera.global_position + camera.global_transform.basis.z * -1
+	equipped_weapon.freeze = false
+	equipped_weapon.collision_layer = 1
+	equipped_weapon.collision_mask = 1
+	var throw_dir = camera.global_transform.basis.z * -1
+	equipped_weapon.linear_velocity = throw_dir * 5.0 + Vector3(velocity.x, 0, velocity.z)
+	equipped_weapon = null
+	if crosshair:
+		crosshair.visible = false
+
+func shoot_weapon():
+	if not equipped_weapon or not equipped_weapon.has_method("shoot"):
+		return
+	
+	var shoot_dir = camera.global_transform.basis.z * -1
+	equipped_weapon.shoot(shoot_dir)

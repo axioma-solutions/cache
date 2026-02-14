@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://7xbum64xpn5w"]
+
+[ext_resource type="Script" uid="uid://do5sdjemnyfey" path="res://scripts/weapon.gd" id="1_pxowi"]
+[ext_resource type="PackedScene" uid="uid://di84qenipmnmp" path="res://models/prototype_pistol/prototype_pistol.glb" id="1_xp6i5"]
+[ext_resource type="PackedScene" uid="uid://yyh4518er1qa" path="res://scenes/effects/projectile.tscn" id="2_numql"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5p3r0"]
+size = Vector3(0.024314117, 0.13420868, 0.20715332)
+
+[node name="PrototypePistol" type="RigidBody3D" groups=["weapon"]]
+mass = 0.5
+script = ExtResource("1_pxowi")
+projectile_scene = ExtResource("2_numql")
+shoot_force = 50.0
+
+[node name="prototype_pistol" parent="." instance=ExtResource("1_xp6i5")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00015296414, -0.041698456, 0.004211426)
+shape = SubResource("BoxShape3D_5p3r0")
+
+[node name="Muzzle" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.11218821)
