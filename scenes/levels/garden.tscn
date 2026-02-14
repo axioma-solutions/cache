@@ -1,10 +1,11 @@
-[gd_scene load_steps=15 format=3 uid="uid://b14184np7jdud"]
+[gd_scene load_steps=16 format=3 uid="uid://b14184np7jdud"]
 
 [ext_resource type="Texture2D" uid="uid://dd5l4wywksqty" path="res://textures/walls/proto_gray.png" id="1_c3myy"]
 [ext_resource type="PackedScene" uid="uid://cj0dbn6p5plev" path="res://models/terrain/ramp.tscn" id="2_8i028"]
 [ext_resource type="PackedScene" uid="uid://duywxffl2ehdw" path="res://scenes/props/barrel.tscn" id="3_2dny5"]
 [ext_resource type="Script" uid="uid://eglswj3vblyr" path="res://scripts/suns.gd" id="4_suns"]
 [ext_resource type="Texture2D" uid="uid://13tgwsw5cakv" path="res://textures/walls/proto_white.png" id="5_2y7ey"]
+[ext_resource type="Script" uid="uid://cd0k52cgxuuy0" path="res://scripts/object_spawner.gd" id="6_03sew"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
 sky_horizon_color = Color(0.646, 0.656, 0.67, 1)
@@ -143,3 +144,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.049999952, -1)
 use_collision = true
 size = Vector3(0.4, 0.4, 0.4)
 material = SubResource("StandardMaterial3D_03sew")
+
+[node name="BarrelSpawner" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 1.5, 0)
+script = ExtResource("6_03sew")
+object_scene = ExtResource("3_2dny5")
+respawn_delay = 2.0

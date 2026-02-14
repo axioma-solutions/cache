@@ -242,10 +242,11 @@ func drop_object():
 func throw_object():
 	if held_object:
 		var throw_direction = camera.global_transform.basis.z * -1
+		var player_velocity = Vector3(velocity.x, 0, velocity.z)
 		
 		held_object.freeze = false
 		held_object.collision_layer = 1
 		held_object.collision_mask = 1
-		# Throw force inversely proportional to mass
-		held_object.linear_velocity = throw_direction * (throw_force / held_object.mass)
+		# Throw force inversely proportional to mass + player velocity
+		held_object.linear_velocity = throw_direction * (throw_force / held_object.mass) + player_velocity
 		held_object = null
