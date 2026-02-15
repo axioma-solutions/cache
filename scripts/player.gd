@@ -61,10 +61,11 @@ func _input(event):
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		rotate_y(-event.relative.x * MOUSE_SENSITIVITY)
-		# Clamp before applying rotation
 		var new_rotation_x = camera.rotation.x - event.relative.y * MOUSE_SENSITIVITY
 		new_rotation_x = clamp(new_rotation_x, -PI / 2, PI / 2)
 		camera.rotation.x = new_rotation_x
+		if equipped_weapon and equipped_weapon.has_method("add_sway"):
+			equipped_weapon.add_sway(event.relative)
 	
 	if event.is_action_pressed("interact"):
 		if held_object:
@@ -295,7 +296,7 @@ func pickup_weapon(weapon: RigidBody3D):
 	weapon.freeze = true
 	weapon.collision_layer = 0
 	weapon.collision_mask = 0
-	equipped_weapon = weapon
+	equipped_weapon = weapon.get_node("Pivot")
 	if crosshair:
 		crosshair.visible = true
 

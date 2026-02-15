@@ -14,17 +14,20 @@ size = Vector3(0.024314117, 0.13420868, 0.20715332)
 
 [node name="PrototypePistol" type="RigidBody3D" groups=["weapon"]]
 mass = 0.5
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00015296414, -0.041698456, -0.046813823)
+shape = SubResource("BoxShape3D_5p3r0")
+
+[node name="Pivot" type="Node3D" parent="."]
 script = ExtResource("1_pxowi")
-fire_rate = 0.05
 impact_force = 50.0
 muzzle_flash_textures = Array[Texture2D]([ExtResource("2_3rwhx"), ExtResource("3_qx5r0"), ExtResource("4_h302n"), ExtResource("5_ktn5r"), ExtResource("6_w7piv")])
 bullet_hole_scene = ExtResource("7_qx5r0")
+sway_amount = 0.003
 
-[node name="prototype_pistol" parent="." instance=ExtResource("1_xp6i5")]
+[node name="prototype_pistol" parent="Pivot" instance=ExtResource("1_xp6i5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.05102525)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00015296414, -0.041698456, 0.004211426)
-shape = SubResource("BoxShape3D_5p3r0")
-
-[node name="Muzzle" type="Node3D" parent="."]
+[node name="Muzzle" type="Node3D" parent="Pivot"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.11218821)

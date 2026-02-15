@@ -6,6 +6,9 @@ extends Node3D
 @export var impact_force: float = 5.0
 @export var muzzle_flash_textures: Array[Texture2D] = []
 @export var bullet_hole_scene: PackedScene
+@export var sway_amount: float = 0.005
+
+var sway_offset: Vector3 = Vector3.ZERO
 
 var can_shoot: bool = true
 var fire_timer: float = 0.0
@@ -17,6 +20,14 @@ func _process(delta):
 		fire_timer -= delta
 		if fire_timer <= 0:
 			can_shoot = true
+	
+	var weapon_root = get_parent()
+	if weapon_root and weapon_root.get_parent() and weapon_root.get_parent().name == "WeaponHolder":
+		sway_offset = sway_offset.lerp(Vector3.ZERO, 5.0 * delta)
+		rotation = sway_offset
+
+func add_sway(mouse_delta: Vector2):
+	sway_offset += Vector3(-mouse_delta.y, mouse_delta.x, 0) * sway_amount * 0.2
 
 func shoot(from: Vector3, direction: Vector3, player):
 	if not can_shoot:
