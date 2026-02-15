@@ -4,6 +4,8 @@ extends Node3D
 @export var max_range: float = 100.0
 @export var damage: float = 10.0
 @export var impact_force: float = 5.0
+@export var recoil_amount: float = 0.1
+@export var recoil_speed: float = 10.0
 @export var muzzle_flash_textures: Array[Texture2D] = []
 @export var bullet_hole_scene: PackedScene
 @export var sway_amount: float = 0.005
@@ -11,6 +13,7 @@ extends Node3D
 
 var sway_offset: Vector3 = Vector3.ZERO
 var bob_position: Vector3 = Vector3.ZERO
+var recoil_offset: Vector3 = Vector3.ZERO
 
 var can_shoot: bool = true
 var fire_timer: float = 0.0
@@ -26,8 +29,9 @@ func _process(delta):
 	var weapon_root = get_parent()
 	if weapon_root and weapon_root.get_parent() and weapon_root.get_parent().name == "WeaponHolder":
 		sway_offset = sway_offset.lerp(Vector3.ZERO, 5.0 * delta)
-		rotation = sway_offset
-		position = bob_position
+		recoil_offset = recoil_offset.lerp(Vector3.ZERO, recoil_speed * delta)
+		rotation = sway_offset + Vector3(recoil_offset.x, 0, 0)
+		position = bob_position + Vector3(0, 0, recoil_offset.z)
 
 func add_sway(mouse_delta: Vector2):
 	var holder = get_parent().get_parent()
@@ -62,8 +66,12 @@ func shoot(from: Vector3, direction: Vector3, player):
 		create_bullet_hole(result.position, result.normal, result.collider)
 	
 	create_muzzle_flash()
+	apply_recoil()
 	can_shoot = false
 	fire_timer = fire_rate
+
+func apply_recoil():
+	recoil_offset = Vector3(recoil_amount, 0, recoil_amount * 0.5)
 
 func create_muzzle_flash():
 	if not muzzle:
