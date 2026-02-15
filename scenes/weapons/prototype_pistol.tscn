@@ -1,8 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://7xbum64xpn5w"]
+[gd_scene load_steps=9 format=3 uid="uid://7xbum64xpn5w"]
 
 [ext_resource type="Script" uid="uid://do5sdjemnyfey" path="res://scripts/weapon.gd" id="1_pxowi"]
 [ext_resource type="PackedScene" uid="uid://di84qenipmnmp" path="res://models/prototype_pistol/prototype_pistol.glb" id="1_xp6i5"]
-[ext_resource type="PackedScene" uid="uid://yyh4518er1qa" path="res://scenes/effects/projectile.tscn" id="2_numql"]
+[ext_resource type="Texture2D" uid="uid://br5e57el4n1i7" path="res://textures/effects/muzzle_flash/muzzle_flash_01.png" id="2_3rwhx"]
+[ext_resource type="Texture2D" uid="uid://b00etwtcq3652" path="res://textures/effects/muzzle_flash/muzzle_flash_02.png" id="3_qx5r0"]
+[ext_resource type="Texture2D" uid="uid://bc8j80dgj5mb4" path="res://textures/effects/muzzle_flash/muzzle_flash_03.png" id="4_h302n"]
+[ext_resource type="Texture2D" uid="uid://dftye5tpckjue" path="res://textures/effects/muzzle_flash/muzzle_flash_04.png" id="5_ktn5r"]
+[ext_resource type="Texture2D" uid="uid://cw77xyvwdywwv" path="res://textures/effects/muzzle_flash/muzzle_flash_05.png" id="6_w7piv"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5p3r0"]
 size = Vector3(0.024314117, 0.13420868, 0.20715332)
@@ -10,8 +14,9 @@ size = Vector3(0.024314117, 0.13420868, 0.20715332)
 [node name="PrototypePistol" type="RigidBody3D" groups=["weapon"]]
 mass = 0.5
 script = ExtResource("1_pxowi")
-projectile_scene = ExtResource("2_numql")
-shoot_force = 50.0
+fire_rate = 0.05
+impact_force = 50.0
+muzzle_flash_textures = Array[Texture2D]([ExtResource("2_3rwhx"), ExtResource("3_qx5r0"), ExtResource("4_h302n"), ExtResource("5_ktn5r"), ExtResource("6_w7piv")])
 
 [node name="prototype_pistol" parent="." instance=ExtResource("1_xp6i5")]
 

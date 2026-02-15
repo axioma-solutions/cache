@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://terrain001"]
 
-[ext_resource type="PackedScene" uid="uid://bfnr1mh5yev12" path="res://models/terrain/bumpy_terrain.glb" id="1"]
+[ext_resource type="PackedScene" uid="uid://60sl5c1fpmea" path="res://models/terrain/bumpy_terrain.glb" id="1"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
 size = Vector3(10, 1, 10)

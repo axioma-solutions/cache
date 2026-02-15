@@ -319,5 +319,6 @@ func shoot_weapon():
 	if not equipped_weapon or not equipped_weapon.has_method("shoot"):
 		return
 	
+	var shoot_from = camera.global_position
 	var shoot_dir = camera.global_transform.basis.z * -1
-	equipped_weapon.shoot(shoot_dir)
+	equipped_weapon.shoot(shoot_from, shoot_dir, self)
