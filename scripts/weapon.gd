@@ -7,8 +7,10 @@ extends Node3D
 @export var muzzle_flash_textures: Array[Texture2D] = []
 @export var bullet_hole_scene: PackedScene
 @export var sway_amount: float = 0.005
+@export var bob_sway_amount: float = 0.005
 
 var sway_offset: Vector3 = Vector3.ZERO
+var bob_position: Vector3 = Vector3.ZERO
 
 var can_shoot: bool = true
 var fire_timer: float = 0.0
@@ -25,9 +27,22 @@ func _process(delta):
 	if weapon_root and weapon_root.get_parent() and weapon_root.get_parent().name == "WeaponHolder":
 		sway_offset = sway_offset.lerp(Vector3.ZERO, 5.0 * delta)
 		rotation = sway_offset
+		position = bob_position
 
 func add_sway(mouse_delta: Vector2):
-	sway_offset += Vector3(-mouse_delta.y, mouse_delta.x, 0) * sway_amount * 0.2
+	var holder = get_parent().get_parent()
+	var amount = holder.sway_amount * 0.001 if holder and holder.has_method("get") else sway_amount
+	sway_offset += Vector3(-mouse_delta.y, mouse_delta.x, 0) * amount * 0.2
+
+func update_bob_sway(bob_time: float, horizontal_speed: float):
+	var holder = get_parent().get_parent()
+	var amount = holder.bob_sway_amount * 0.001 if holder and holder.has_method("get") else bob_sway_amount
+	if horizontal_speed > 0.1:
+		var bob_y = sin(bob_time) * amount * horizontal_speed
+		var bob_x = cos(bob_time * 0.5) * amount * 0.5 * horizontal_speed
+		bob_position = Vector3(bob_x, bob_y, 0)
+	else:
+		bob_position = Vector3.ZERO
 
 func shoot(from: Vector3, direction: Vector3, player):
 	if not can_shoot:

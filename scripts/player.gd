@@ -183,6 +183,9 @@ func apply_view_bobbing(delta):
 	
 	camera.position.x = bob_offset_x
 	camera.rotation.z = bob_offset_x * 0.2
+	
+	if equipped_weapon and equipped_weapon.has_method("update_bob_sway"):
+		equipped_weapon.update_bob_sway(bob_time, horizontal_speed)
 
 func update_held_object(delta):
 	if held_object:
@@ -224,6 +227,22 @@ func try_pickup():
 	var space_state = get_world_3d().direct_space_state
 	var from = camera.global_position
 	var to = from + camera.global_transform.basis.z * -PICKUP_DISTANCE
+	
+	# Try spherecast for weapons first
+	var shape_query = PhysicsShapeQueryParameters3D.new()
+	var sphere = SphereShape3D.new()
+	sphere.radius = 0.3
+	shape_query.shape = sphere
+	shape_query.transform = Transform3D(Basis(), from)
+	shape_query.motion = camera.global_transform.basis.z * -PICKUP_DISTANCE
+	var shape_results = space_state.intersect_shape(shape_query, 10)
+	
+	for shape_result in shape_results:
+		if shape_result.collider is RigidBody3D and shape_result.collider.is_in_group("weapon"):
+			pickup_weapon(shape_result.collider)
+			return
+	
+	# Fallback to raycast for other objects
 	var query = PhysicsRayQueryParameters3D.create(from, to)
 	var result = space_state.intersect_ray(query)
 	
@@ -304,14 +323,15 @@ func throw_weapon():
 	if not equipped_weapon:
 		return
 	
-	weapon_holder.remove_child(equipped_weapon)
-	get_tree().root.add_child(equipped_weapon)
-	equipped_weapon.global_position = camera.global_position + camera.global_transform.basis.z * -1
-	equipped_weapon.freeze = false
-	equipped_weapon.collision_layer = 1
-	equipped_weapon.collision_mask = 1
+	var weapon_root = equipped_weapon.get_parent()
+	weapon_holder.remove_child(weapon_root)
+	get_tree().root.add_child(weapon_root)
+	weapon_root.global_position = camera.global_position + camera.global_transform.basis.z * -1
+	weapon_root.freeze = false
+	weapon_root.collision_layer = 1
+	weapon_root.collision_mask = 1
 	var throw_dir = camera.global_transform.basis.z * -1
-	equipped_weapon.linear_velocity = throw_dir * 5.0 + Vector3(velocity.x, 0, velocity.z)
+	weapon_root.linear_velocity = throw_dir * 5.0 + Vector3(velocity.x, 0, velocity.z)
 	equipped_weapon = null
 	if crosshair:
 		crosshair.visible = false

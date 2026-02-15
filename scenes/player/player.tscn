@@ -1,12 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://player001"]
+[gd_scene load_steps=5 format=3 uid="uid://player001"]
 
 [ext_resource type="Script" uid="uid://u6pqp41t8q3x" path="res://scripts/player.gd" id="1"]
 [ext_resource type="Script" uid="uid://dutnbo17kluup" path="res://scripts/crosshair.gd" id="2_dovo2"]
+[ext_resource type="Script" uid="uid://mamb0ovojg8d" path="res://scripts/weapon_holder.gd" id="3"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
 height = 1.8
 
-[node name="Player" type="CharacterBody3D"]
+[node name="Player" type="CharacterBody3D" groups=["player"]]
 script = ExtResource("1")
 throw_force = 30.0
 crouch_multiplier = 0.7
@@ -20,6 +21,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.65, 0)
 
 [node name="WeaponHolder" type="Node3D" parent="Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.11174661, -0.0945518, -0.28804126)
+script = ExtResource("3")
+sway_amount = 3.0
+bob_sway_amount = 5.0
 
 [node name="UI" type="CanvasLayer" parent="."]
 

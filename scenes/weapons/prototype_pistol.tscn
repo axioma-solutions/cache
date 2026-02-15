@@ -10,13 +10,13 @@
 [ext_resource type="PackedScene" uid="uid://dxa7nldy74scv" path="res://scenes/effects/bullet_hole.tscn" id="7_qx5r0"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5p3r0"]
-size = Vector3(0.024314117, 0.13420868, 0.20715332)
+size = Vector3(0.026159097, 0.13420868, 0.20904541)
 
 [node name="PrototypePistol" type="RigidBody3D" groups=["weapon"]]
 mass = 0.5
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00015296414, -0.041698456, -0.046813823)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0001092013, -0.041698456, -0.04775987)
 shape = SubResource("BoxShape3D_5p3r0")
 
 [node name="Pivot" type="Node3D" parent="."]
