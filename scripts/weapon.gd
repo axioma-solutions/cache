@@ -5,6 +5,7 @@ extends Node3D
 @export var damage: float = 10.0
 @export var impact_force: float = 5.0
 @export var muzzle_flash_textures: Array[Texture2D] = []
+@export var bullet_hole_scene: PackedScene
 
 var can_shoot: bool = true
 var fire_timer: float = 0.0
@@ -32,6 +33,7 @@ func shoot(from: Vector3, direction: Vector3, player):
 		if result.collider is RigidBody3D:
 			result.collider.apply_impulse(direction * impact_force, result.position - result.collider.global_position)
 		create_impact_effect(result.position, result.normal, result.collider)
+		create_bullet_hole(result.position, result.normal, result.collider)
 	
 	create_muzzle_flash()
 	can_shoot = false
@@ -66,31 +68,22 @@ func create_muzzle_flash():
 	quad.queue_free()
 
 func create_impact_effect(pos: Vector3, normal: Vector3, collider):
-	# Get texture from hit object
 	var base_texture: Texture2D = null
-	var surface_color = Color(1, 0, 0)  # Bright red default for visibility
+	var surface_color = Color(1, 0, 0)
 	
-	print("Hit collider: ", collider.get_class(), " - ", collider.name)
-	
-	# For CSGBox3D, get material directly
 	if collider is CSGBox3D:
 		var mat = collider.material
 		if mat is StandardMaterial3D:
 			base_texture = mat.albedo_texture
 			surface_color = mat.albedo_color
-			print("Got CSG color: ", surface_color)
-	# For physics bodies, check children recursively
 	elif collider is StaticBody3D or collider is RigidBody3D:
-		# Check parent first (ground mesh might be parent of collision)
 		var parent = collider.get_parent()
 		if parent and parent is MeshInstance3D:
 			var mat = parent.get_active_material(0)
 			if mat is StandardMaterial3D:
 				base_texture = mat.albedo_texture
 				surface_color = mat.albedo_color
-				print("Got mesh color from parent: ", surface_color)
 		else:
-			# Search all descendants
 			var nodes_to_check = collider.get_children()
 			while nodes_to_check.size() > 0:
 				var node = nodes_to_check.pop_front()
@@ -100,29 +93,21 @@ func create_impact_effect(pos: Vector3, normal: Vector3, collider):
 					if mat is StandardMaterial3D:
 						base_texture = mat.albedo_texture
 						surface_color = mat.albedo_color
-						print("Got mesh color from descendant: ", surface_color)
 						break
 				elif node is CSGBox3D or node is CSGMesh3D:
 					var mat = node.material
 					if mat is StandardMaterial3D:
 						base_texture = mat.albedo_texture
 						surface_color = mat.albedo_color
-						print("Got CSG color from descendant: ", surface_color)
 						break
 				
-				# Add this node's children to search
 				nodes_to_check.append_array(node.get_children())
-	# Direct MeshInstance3D
 	elif collider is MeshInstance3D:
 		var mat = collider.get_active_material(0)
 		if mat is StandardMaterial3D:
 			base_texture = mat.albedo_texture
 			surface_color = mat.albedo_color
-			print("Got direct mesh color: ", surface_color)
 	
-	print("Final color: ", surface_color)
-	
-	# Spawn all particles at once
 	for i in range(8):
 		var particle = MeshInstance3D.new()
 		get_tree().root.add_child(particle)
@@ -140,9 +125,6 @@ func create_impact_effect(pos: Vector3, normal: Vector3, collider):
 		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 		particle.material_override = mat
 		
-		print("Spawned particle at ", pos, " with color ", surface_color)
-		
-		# Each particle has slightly different lifetime
 		var velocity = (normal + Vector3(randf_range(-0.5, 0.5), randf_range(0, 0.3), randf_range(-0.5, 0.5))).normalized() * randf_range(2, 4)
 		var max_lifetime = randf_range(0.3, 0.4)
 		animate_particle_mesh(particle, velocity, max_lifetime)
@@ -165,3 +147,39 @@ func animate_particle_mesh(particle: MeshInstance3D, velocity: Vector3, max_life
 			mat.albedo_color.a = 1.0 - (lifetime / max_lifetime)
 	
 	particle.queue_free()
+
+
+func create_bullet_hole(pos: Vector3, normal: Vector3, collider):
+	if not bullet_hole_scene:
+		return
+	
+	var decal = bullet_hole_scene.instantiate()
+	
+	if collider is RigidBody3D:
+		collider.add_child(decal)
+	else:
+		get_tree().root.add_child(decal)
+	
+	decal.global_position = pos
+	
+	var right = Vector3.RIGHT if abs(normal.dot(Vector3.RIGHT)) < 0.99 else Vector3.FORWARD
+	var tangent = normal.cross(right).normalized()
+	right = tangent.cross(normal).normalized()
+	decal.global_transform.basis = Basis(right, -normal, tangent)
+	decal.rotate_object_local(Vector3(0, 1, 0), randf() * TAU)
+	
+	fade_bullet_hole(decal)
+
+func fade_bullet_hole(decal: Node3D):
+	await get_tree().create_timer(5.0).timeout
+	
+	var fade_time = 2.0
+	var elapsed = 0.0
+	
+	while elapsed < fade_time:
+		await get_tree().process_frame
+		var delta = get_process_delta_time()
+		elapsed += delta
+		decal.modulate.a = 1.0 - (elapsed / fade_time)
+	
+	decal.queue_free()

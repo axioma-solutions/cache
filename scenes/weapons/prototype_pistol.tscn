@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://7xbum64xpn5w"]
+[gd_scene load_steps=10 format=3 uid="uid://7xbum64xpn5w"]
 
 [ext_resource type="Script" uid="uid://do5sdjemnyfey" path="res://scripts/weapon.gd" id="1_pxowi"]
 [ext_resource type="PackedScene" uid="uid://di84qenipmnmp" path="res://models/prototype_pistol/prototype_pistol.glb" id="1_xp6i5"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://bc8j80dgj5mb4" path="res://textures/effects/muzzle_flash/muzzle_flash_03.png" id="4_h302n"]
 [ext_resource type="Texture2D" uid="uid://dftye5tpckjue" path="res://textures/effects/muzzle_flash/muzzle_flash_04.png" id="5_ktn5r"]
 [ext_resource type="Texture2D" uid="uid://cw77xyvwdywwv" path="res://textures/effects/muzzle_flash/muzzle_flash_05.png" id="6_w7piv"]
+[ext_resource type="PackedScene" uid="uid://dxa7nldy74scv" path="res://scenes/effects/bullet_hole.tscn" id="7_qx5r0"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5p3r0"]
 size = Vector3(0.024314117, 0.13420868, 0.20715332)
@@ -17,6 +18,7 @@ script = ExtResource("1_pxowi")
 fire_rate = 0.05
 impact_force = 50.0
 muzzle_flash_textures = Array[Texture2D]([ExtResource("2_3rwhx"), ExtResource("3_qx5r0"), ExtResource("4_h302n"), ExtResource("5_ktn5r"), ExtResource("6_w7piv")])
+bullet_hole_scene = ExtResource("7_qx5r0")
 
 [node name="prototype_pistol" parent="." instance=ExtResource("1_xp6i5")]
 
