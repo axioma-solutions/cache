@@ -1,15 +1,15 @@
-[gd_scene load_steps=3 format=3 uid="uid://main001"]
+[gd_scene format=3 uid="uid://main001"]
 
 [ext_resource type="PackedScene" uid="uid://player001" path="res://scenes/player/player.tscn" id="1"]
 [ext_resource type="PackedScene" uid="uid://b14184np7jdud" path="res://scenes/levels/garden.tscn" id="2_0wfyh"]
 
-[node name="Main" type="Node3D"]
+[node name="Main" type="Node3D" unique_id=1392108402]
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1232757667]
 transform = Transform3D(0.54241467, -0.75279695, -0.37293857, 0.82638335, 0.3981774, 0.39817733, -0.15125096, -0.5241673, 0.83807623, 0, 10, 0)
 shadow_enabled = true
 
-[node name="Player" parent="." instance=ExtResource("1")]
+[node name="Player" parent="." unique_id=621085656 instance=ExtResource("1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.004037857, 2, 8.00023)
 
-[node name="Garden" parent="." instance=ExtResource("2_0wfyh")]
+[node name="Garden" parent="." unique_id=1960640878 instance=ExtResource("2_0wfyh")]

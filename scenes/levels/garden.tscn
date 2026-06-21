@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://b14184np7jdud"]
+[gd_scene format=3 uid="uid://b14184np7jdud"]
 
 [ext_resource type="Texture2D" uid="uid://dd5l4wywksqty" path="res://textures/walls/proto_gray.png" id="1_c3myy"]
 [ext_resource type="PackedScene" uid="uid://cj0dbn6p5plev" path="res://models/terrain/ramp.tscn" id="2_8i028"]
@@ -47,110 +47,114 @@ uv1_triplanar = true
 albedo_color = Color(0.14999998, 0.33416665, 1, 1)
 albedo_texture = ExtResource("5_2y7ey")
 
-[node name="Garden" type="Node3D"]
+[node name="Garden" type="Node3D" unique_id=94842598]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2127145981]
 environment = SubResource("Environment_env")
 
-[node name="Node3D" parent="." instance=ExtResource("2_8i028")]
+[node name="Node3D" parent="." unique_id=1464590955 instance=ExtResource("2_8i028")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2.9861145, -11)
 use_collision = true
 
-[node name="Ground" type="MeshInstance3D" parent="."]
+[node name="Ground" type="MeshInstance3D" parent="." unique_id=740132511]
 mesh = SubResource("BoxMesh_ground")
 
-[node name="GroundCollision" type="StaticBody3D" parent="Ground"]
+[node name="GroundCollision" type="StaticBody3D" parent="Ground" unique_id=134604682]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/GroundCollision"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/GroundCollision" unique_id=1357466825]
 shape = SubResource("BoxShape3D_ground")
 
-[node name="BushWalls" type="Node3D" parent="."]
+[node name="BushWalls" type="Node3D" parent="." unique_id=1345475199]
 
-[node name="NorthWall" type="CSGBox3D" parent="BushWalls"]
+[node name="NorthWall" type="CSGBox3D" parent="BushWalls" unique_id=747032047]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -25)
 use_collision = true
 size = Vector3(50, 3, 2)
 material = SubResource("StandardMaterial3D_8i028")
 
-[node name="SouthWall" type="CSGBox3D" parent="BushWalls"]
+[node name="SouthWall" type="CSGBox3D" parent="BushWalls" unique_id=636045572]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 25)
 use_collision = true
 size = Vector3(50, 3, 2)
 material = SubResource("StandardMaterial3D_8i028")
 
-[node name="EastWall" type="CSGBox3D" parent="BushWalls"]
+[node name="EastWall" type="CSGBox3D" parent="BushWalls" unique_id=414459484]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 1.5, 0)
 use_collision = true
 size = Vector3(2, 3, 50)
 material = SubResource("StandardMaterial3D_8i028")
 
-[node name="WestWall" type="CSGBox3D" parent="BushWalls"]
+[node name="WestWall" type="CSGBox3D" parent="BushWalls" unique_id=1278860207]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25, 1.5, 0)
 use_collision = true
 size = Vector3(2, 3, 50)
 material = SubResource("StandardMaterial3D_8i028")
 
-[node name="House" type="CSGBox3D" parent="."]
+[node name="House" type="CSGBox3D" parent="." unique_id=2052126420]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.5, 10)
 use_collision = true
 size = Vector3(8, 5, 8)
 material = SubResource("StandardMaterial3D_orange")
 
-[node name="Suns" type="Node3D" parent="."]
+[node name="Suns" type="Node3D" parent="." unique_id=1950253189]
+visible = false
 script = ExtResource("4_suns")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Suns"]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Suns" unique_id=2023785379]
 transform = Transform3D(0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, -0.75, 0.433013, 0, 10, 0)
+visible = false
 light_color = Color(1, 0.95, 0.8, 1)
 shadow_enabled = true
 
-[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="Suns"]
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="Suns" unique_id=280270882]
 transform = Transform3D(-0.5, -0.75, 0.433013, 0, 0.5, 0.866025, -0.866025, 0.433013, -0.25, 0, 10, 0)
+visible = false
 light_color = Color(1, 0.7, 0.5, 1)
 shadow_enabled = true
 
-[node name="DirectionalLight3D3" type="DirectionalLight3D" parent="Suns"]
+[node name="DirectionalLight3D3" type="DirectionalLight3D" parent="Suns" unique_id=2122781112]
 transform = Transform3D(0.2500001, 0.6737006, -0.6954333, -0.8660252, 0.47679168, 0.15056583, 0.4330131, 0.56462127, 0.7026397, 0, 10, 0)
+visible = false
 light_color = Color(0.8, 0.9, 1, 1)
 shadow_enabled = true
 
-[node name="Barrel" parent="." instance=ExtResource("3_2dny5")]
+[node name="Barrel" parent="." unique_id=829742273 instance=ExtResource("3_2dny5")]
 transform = Transform3D(1, 0, 0, 0, 0.023175925, 0.99973136, 0, -0.99973136, 0.023175925, -8.344339, 4.6000624, -11.004578)
 
-[node name="Barrel2" parent="." instance=ExtResource("3_2dny5")]
+[node name="Barrel2" parent="." unique_id=128827197 instance=ExtResource("3_2dny5")]
 transform = Transform3D(1, 0, 0, 0, -0.027154082, -0.9996313, 0, 0.9996313, -0.027154082, -7.1487885, 4.5723376, -10.115503)
 
-[node name="Barrel3" parent="." instance=ExtResource("3_2dny5")]
+[node name="Barrel3" parent="." unique_id=1861830109 instance=ExtResource("3_2dny5")]
 transform = Transform3D(1, 0, 0, 0, -0.9985253, 0.05428814, 0, -0.05428814, -0.9985253, -4.631069, 3.896409, -10.342836)
 
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1059923986]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 1, 0)
 use_collision = true
 material = SubResource("StandardMaterial3D_03sew")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="CSGBox3D"]
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGBox3D" unique_id=1759753563]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.25, 0)
 use_collision = true
 size = Vector3(0.5, 0.5, 0.5)
 material = SubResource("StandardMaterial3D_03sew")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="CSGBox3D/CSGBox3D"]
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGBox3D/CSGBox3D" unique_id=1114172267]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.100000024, -1)
 use_collision = true
 size = Vector3(0.3, 0.3, 0.3)
 material = SubResource("StandardMaterial3D_03sew")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="CSGBox3D/CSGBox3D/CSGBox3D"]
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGBox3D/CSGBox3D/CSGBox3D" unique_id=994839915]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.049999952, -1)
 use_collision = true
 size = Vector3(0.4, 0.4, 0.4)
 material = SubResource("StandardMaterial3D_03sew")
 
-[node name="BarrelSpawner" type="Node3D" parent="."]
+[node name="BarrelSpawner" type="Node3D" parent="." unique_id=199681243]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 1.5, 0)
 script = ExtResource("6_03sew")
 object_scene = ExtResource("3_2dny5")
 respawn_delay = 2.0
 
-[node name="PrototypePistol" parent="." instance=ExtResource("7_32lya")]
+[node name="PrototypePistol" parent="." unique_id=884343757 instance=ExtResource("7_32lya")]
 transform = Transform3D(0.8660254, -0.4829629, -0.12940952, 0.50000006, 0.8365164, 0.22414389, 0, -0.25881907, 0.96592593, 4.5, 4, -2)
