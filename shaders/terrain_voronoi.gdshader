@@ -28,47 +28,65 @@ vec2 calculate_center(int i, int j) {
    )) * 43758.5453);
 }
 
-vec3 voronoi() {
-	vec2 cell = get_cell();
-	int x = int(cell.x);
-	int y = int(cell.y);
-	
-	int min_i;
-	int min_j;
-	float min_dist = 9999.0;
-	
-	for (int i = x - 1; i <= x + 1; i++) {
-		for (int j = y - 1; j <= y + 1; j++) {
-			vec2 center = (vec2(float(i), float(j)) + calculate_center(i, j)) / voronoi_scale;
-			float new_dist = distance(center, world_pos.xz);
-			if (new_dist < min_dist) {
-				min_dist = new_dist;
-				min_i = i;
-				min_j = j;
-			}
-		}
-	}
-	
+uniform float blend_width : hint_range(0.0, 1.0) = 0.1;
+
+vec3 cell_random(int i, int j) {
 	return vec3(
-       fract(sin(dot(vec2(float(min_i), float(min_j)), vec2(127.1, 311.7))) * 43758.5453),
-       fract(sin(dot(vec2(float(min_i), float(min_j)), vec2(269.5, 183.3))) * 43758.5453),
-       fract(sin(dot(vec2(float(min_i), float(min_j)), vec2(419.2, 371.9))) * 43758.5453)
+		fract(sin(dot(vec2(float(i), float(j)), vec2(127.1, 311.7))) * 43758.5453),
+		fract(sin(dot(vec2(float(i), float(j)), vec2(269.5, 183.3))) * 43758.5453),
+		fract(sin(dot(vec2(float(i), float(j)), vec2(419.2, 371.9))) * 43758.5453)
 	);
 }
 
+vec3 sample_cell(vec3 rand, vec2 uv) {
+	float angle = rand.x * 6.28318;
+	vec2 offset = vec2(rand.y, rand.z);
 
-void fragment() {
-	vec3 vor = voronoi();
-	float angle = vor.x * 6.28318;
-	vec2 offset = vec2(vor.y, vor.z);
-
-	vec2 tiled_uv = fract(UV * tile_scale + offset);
+	vec2 tiled_uv = fract(uv * tile_scale + offset);
 	vec2 centered = tiled_uv - 0.5;
 	float c = cos(angle);
 	float s = sin(angle);
 	vec2 rotated = vec2(c * centered.x - s * centered.y, s * centered.x + c * centered.y) + 0.5;
 
-	ALBEDO = texture(grass_texture, rotated).rgb;
+	return texture(grass_texture, rotated).rgb;
+}
+
+void fragment() {
+	vec2 cell = get_cell();
+	int x = int(cell.x);
+	int y = int(cell.y);
+
+	int min_i1, min_j1, min_i2, min_j2;
+	float min_dist1 = 9999.0;
+	float min_dist2 = 9999.0;
+
+	for (int i = x - 1; i <= x + 1; i++) {
+		for (int j = y - 1; j <= y + 1; j++) {
+			vec2 center = (vec2(float(i), float(j)) + calculate_center(i, j)) / voronoi_scale;
+			float d = distance(center, world_pos.xz);
+			if (d < min_dist1) {
+				min_dist2 = min_dist1;
+				min_i2 = min_i1;
+				min_j2 = min_j1;
+				min_dist1 = d;
+				min_i1 = i;
+				min_j1 = j;
+			} else if (d < min_dist2) {
+				min_dist2 = d;
+				min_i2 = i;
+				min_j2 = j;
+			}
+		}
+	}
+
+	float blend = smoothstep(0.0, blend_width, min_dist2 - min_dist1);
+
+	vec3 rand1 = cell_random(min_i1, min_j1);
+	vec3 rand2 = cell_random(min_i2, min_j2);
+	vec3 color1 = sample_cell(rand1, UV);
+	vec3 color2 = sample_cell(rand2, UV);
+
+	ALBEDO = mix(color2, color1, blend);
 }
 
 // old stuff
